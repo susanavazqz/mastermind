@@ -1,15 +1,13 @@
-from models.player import CodeMaker
-from models.player import CodeBreaker
+from models.player import CodeBreaker, CodeMaker
+from models.board import Board
 
 
 class Game:
-    CODE_LENGTH = 4
-
     def __init__(self):
         self.id = 1
         self.codemaker = CodeMaker()
         self.codebreaker = CodeBreaker()
-        self.code_length = Game.CODE_LENGTH
+        self.board = Board()
         self.close = False
 
     def finish_game(self):

@@ -35,9 +35,9 @@ def play_game(game_id):
 
     data = parser.parse_args()
     codebraker_code = data.get('code').split(",")
-    if len(codebraker_code) != game.code_length:
+    if len(codebraker_code) != game.board.code_length:
         return jsonify(
-            {'message': 'Code must be {} length'.format(game.code_length)}
+            {'message': 'Code must be {} length'.format(game.board.code_length)}
         ), 400
 
     return jsonify({'message': 'TODO'}), 200
