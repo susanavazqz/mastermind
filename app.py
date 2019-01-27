@@ -1,6 +1,5 @@
-import json
-
 from flask import Flask, jsonify, request
+from flask_restful import reqparse
 from models.game import Game
 
 
@@ -27,14 +26,15 @@ def play_game(game_id):
     if game.close:
         return jsonify({'message': 'Game close'}), 400
 
-    request_data = request.get_json()
-    if not request_data:
-        return jsonify({'message': 'Data not found'}), 400
+    parser = reqparse.RequestParser()
+    parser.add_argument('code',
+                        type=str,
+                        required=True,
+                        help="This field is mandatory. "
+                             "Ex: 'code': 'B, P, W, R'")
 
-    if not request_data.get('code'):
-        return jsonify({'message': 'Data not found'}), 400
-
-    codebraker_code = request_data.get('code').split(",")
+    data = parser.parse_args()
+    codebraker_code = data.get('code').split(",")
     if len(codebraker_code) != game.code_length:
         return jsonify(
             {'message': 'Code must be {} length'.format(game.code_length)}
