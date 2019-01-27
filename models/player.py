@@ -1,3 +1,6 @@
+import random
+
+from models.board import Board
 
 
 class Player:
@@ -11,8 +14,11 @@ class Player:
 class CodeMaker(Player):
     def __init__(self):
         super().__init__()
+        self.code = ','.join([random.choice(list(Board.CODE_PEGS.values()))
+                             for _ in range(Board.DEFAULT_CODE_LENGTH)])
 
 
 class CodeBreaker(Player):
     def __init__(self):
         super().__init__()
+        self.guess_code = None
