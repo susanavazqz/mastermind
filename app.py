@@ -34,13 +34,13 @@ def play_game(game_id):
     if not request_data.get('code'):
         return jsonify({'message': 'Data not found'}), 400
 
-    codebraker_code = json.loads(request_data.get('code'))
+    codebraker_code = request_data.get('code').split(",")
     if len(codebraker_code) != game.code_length:
         return jsonify(
             {'message': 'Code must be {} length'.format(game.code_length)}
         ), 400
 
-    return jsonify({}), 200
+    return jsonify({'message': 'TODO'}), 200
 
 
 @app.route('/game/<int:game_id>/history', methods=['GET'])

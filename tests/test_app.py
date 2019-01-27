@@ -17,7 +17,7 @@ class TestApp(TestCase):
     def test_play_game(self):
         resp = self.app.put('game/{}/play'.format(self.game.id),
                             data=json.dumps(
-                                 dict(code='["B", "R", "W", "P"]')),
+                                 dict(code='B, R, W, P')),
                             content_type='application/json')
 
         self.assertEqual(resp.status, '200 OK')
@@ -25,7 +25,7 @@ class TestApp(TestCase):
     def test_play_is_not_close(self):
         resp = self.app.put('game/{}/play'.format(self.game.id),
                             data=json.dumps(
-                                 dict(code='["B", "R", "W", "P"]')),
+                                 dict(code='B, R, W, P')),
                             content_type='application/json')
 
         self.assertEqual(resp.status, '200 OK')
@@ -33,7 +33,7 @@ class TestApp(TestCase):
     def test_play_game_wrong_data_length(self):
         resp = self.app.put('game/{}/play'.format(self.game.id),
                             data=json.dumps(
-                                 dict(code='["B", "R", "W"]')),
+                                 dict(code='B, R, W')),
                             content_type='application/json')
         self.assertEqual(resp.status, '400 BAD REQUEST')
 
@@ -46,6 +46,6 @@ class TestApp(TestCase):
     def test_play_game_not_found(self):
         game = self.app.put('game/-1/play',
                             data=json.dumps(
-                                 dict(code='["B", "R", "W", "P"]')),
+                                 dict(code='B, R, W, P')),
                             content_type='application/json')
         self.assertEqual(game.status, '404 NOT FOUND')
