@@ -15,7 +15,7 @@ def home():
 @app.route('/game', methods=['POST'])
 def create_game():
     game = Game()
-    return jsonify({'id': game.id, 'message': 'Game was created'}), 201
+    return jsonify({'id': game.id, 'message': 'Game has been created'}), 201
 
 
 @app.route('/game/<int:game_id>/play', methods=['POST'])
