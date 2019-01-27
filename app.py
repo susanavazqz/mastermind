@@ -18,7 +18,7 @@ def create_game():
     return jsonify({'id': game.id, 'message': 'Game has been created'}), 201
 
 
-@app.route('/game/<int:game_id>/play', methods=['POST'])
+@app.route('/game/<int:game_id>/play', methods=['PUT'])
 def play_game(game_id):
     game = Game.find_game(game_id)
     if not game:
