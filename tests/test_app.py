@@ -10,42 +10,43 @@ class TestApp(TestCase):
         self.app = app.test_client()
         self.game = Game()
 
+    def make_put_data(self, game_id, data):
+        return self.app.put('game/{}/play'.format(game_id),
+                            data=json.dumps(
+                                 dict(code=data)),
+                            content_type='application/json')
+
     def test_new_game(self):
         resp = self.app.post('/game')
         self.assertEqual(resp.status, '201 CREATED')
 
     def test_play_game(self):
-        resp = self.app.put('game/{}/play'.format(self.game.id),
-                            data=json.dumps(
-                                 dict(code='B, R, W, P')),
-                            content_type='application/json')
+        resp = self.make_put_data(self.game.id, 'B, R, W, P')
 
         self.assertEqual(resp.status, '200 OK')
 
     def test_play_is_not_close(self):
-        resp = self.app.put('game/{}/play'.format(self.game.id),
-                            data=json.dumps(
-                                 dict(code='B, R, W, P')),
-                            content_type='application/json')
+        resp = self.make_put_data(self.game.id, 'B, R, W, P')
 
         self.assertEqual(resp.status, '200 OK')
 
+    # TODO
+    # def test_play_is_close(self):
+    #     game = Game()
+    #     game.finish_game()
+    #     resp = self.make_put_data(game.id, 'B, R, W, P')
+    #     self.assertEqual(resp.status, '400 BAD REQUEST')
+
     def test_play_game_wrong_data_length(self):
-        resp = self.app.put('game/{}/play'.format(self.game.id),
-                            data=json.dumps(
-                                 dict(code='B, R, W')),
-                            content_type='application/json')
+        resp = self.make_put_data(self.game.id, 'B, R, W')
         self.assertEqual(resp.status, '400 BAD REQUEST')
 
     def test_play_without_data(self):
-        resp = self.app.put('game/{}/play'.format(self.game.id),
-                            data=json.dumps(dict()),
-                            content_type='application/json')
+        resp = self.make_put_data(self.game.id, dict())
         self.assertEqual(resp.status, '400 BAD REQUEST')
 
     def test_play_game_not_found(self):
-        game = self.app.put('game/-1/play',
-                            data=json.dumps(
-                                 dict(code='B, R, W, P')),
-                            content_type='application/json')
-        self.assertEqual(game.status, '404 NOT FOUND')
+        resp = self.make_put_data(-1, 'B, R, W, P')
+        self.assertEqual(resp.status, '404 NOT FOUND')
+
+
