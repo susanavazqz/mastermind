@@ -1,22 +1,23 @@
 from unittest import TestCase
 
-from app.player import CodeBreaker
-from app.player import CodeMaker
-from app.game import Game
+from models.player import CodeBreaker
+from models.player import CodeMaker
+from models.game import Game
 
 
 class TestGame(TestCase):
     def setUp(self):
+        self.game = Game()
         self.codeMaker = CodeMaker()
-        self.codeBraker = CodeBreaker()
+        self.codeBreaker = CodeBreaker()
 
     def test_create_game(self):
-        game = Game(self.codeMaker, self.codeBraker)
+        self.assertTrue(self.game.id)
 
-        self.assertEqual(game.close, False)
+    def test_create_open_game(self):
+        self.assertEqual(self.game.close, False)
 
     def test_finish_game(self):
-        game = Game(self.codeMaker, self.codeBraker)
-        game.finish_game()
+        self.game.finish_game()
 
-        self.assertEqual(game.close, True)
+        self.assertEqual(self.game.close, True)
