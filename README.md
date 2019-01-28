@@ -29,6 +29,7 @@ At the moment only the basic version is available with following features:
 $ git clone https://github.com/susanavazqz/mastermind
 $ cd mastermind
 $ pip install -r requirements.txt
+$ python app.py
 ```
 
 
@@ -72,7 +73,7 @@ You can use curl from command line or postman to play mastermind
  }
  ```
  
-## TODO
+### TODO
 
 * Custom length of pattern / code
 * Custom colors
