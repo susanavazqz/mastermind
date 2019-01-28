@@ -36,9 +36,9 @@ class Game:
 
         return result
 
-    @staticmethod
-    def find_game(id):
-        if id == 1:
+    @classmethod
+    def find_game(cls, game_id):
+        if game_id == 1:
             return Game()
         else:
             return False

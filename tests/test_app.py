@@ -11,9 +11,8 @@ class TestApp(TestCase):
         self.game = Game()
 
     def make_put_data(self, game_id, data):
-        return self.app.put('game/{}/play'.format(game_id),
-                            data=json.dumps(
-                                 dict(code=data)),
+        return self.app.put('game/{}'.format(game_id),
+                            data=json.dumps(dict(code=data)),
                             content_type='application/json')
 
     def test_new_game(self):
@@ -22,7 +21,6 @@ class TestApp(TestCase):
 
     def test_play_game(self):
         resp = self.make_put_data(self.game.id, 'B,R,W,P')
-
         self.assertEqual(resp.status, '200 OK')
 
     def test_play_is_not_close(self):
