@@ -68,8 +68,7 @@ You can use curl from command line or postman to play mastermind
   "result": { 
       "black_pegs": 1,
       "white_pegs": 2
-    },
-   "status": "Keep Trying!"
+    }
  }
  ```
  
