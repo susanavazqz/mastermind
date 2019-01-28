@@ -1,27 +1,22 @@
-from mock import patch
 from unittest import TestCase
 
-from models.player import CodeBreaker
-from models.player import CodeMaker
 from models.game import Game
 
 
 class TestGame(TestCase):
     def setUp(self):
         self.game = Game()
-        self.codeMaker = CodeMaker()
-        self.codeBreaker = CodeBreaker()
 
     def test_create_game(self):
-        self.assertTrue(self.game.id)
+        self.assertTrue(self.game)
 
     def test_create_open_game(self):
         self.assertEqual(self.game.close, False)
 
     def test_finish_game(self):
-        self.game.finish_game()
-
-        self.assertEqual(self.game.close, True)
+        self.game.codebreaker.guess_code = 'B,P,W,R'
+        self.game.codemaker.code = 'B,P,W,R'
+        self.assertEqual(self.game._is_finished_game(), True)
 
     def test_get_black_pegs(self):
         self.game.codebreaker.guess_code = 'B,P,W,R'

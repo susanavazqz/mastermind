@@ -1,56 +1,36 @@
-from flask import Flask, jsonify
-from flask_restful import reqparse
-from models.game import Game
+import logging
+import sys
+
+from flask import Flask
+from flask_restful import Api
+from resources.game import GameResource
+
+from db import db
 
 
 app = Flask(__name__)
 
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///data.db'
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+app.config['PROPAGATE_EXCEPTIONS'] = True
 
-@app.route('/')
-def home():
-    return 'Mastermind'
+handler = logging.StreamHandler(sys.stdout)
+handler.setFormatter(logging.Formatter(
+    '%(asctime)s - %(name)s - %(levelname)s - %(message)s'))
+app.logger.addHandler(handler)
+app.logger.setLevel(logging.INFO)
 
+api = Api(app)
 
-@app.route('/game', methods=['POST'])
-def create_game():
-    game = Game()
-    return jsonify({'id': game.id, 'message': 'Game has been created'}), 201
-
-
-@app.route('/game/<int:game_id>/play', methods=['PUT'])
-def play_game(game_id):
-    game = Game.find_game(game_id)
-    if not game:
-        return jsonify({'message': 'Game not found'}), 404
-    if game.close:
-        return jsonify({'message': 'Game close'}), 400
-    parser = reqparse.RequestParser()
-    parser.add_argument('code',
-                        type=str,
-                        required=True,
-                        help="This field is mandatory. "
-                             "Ex: 'code': 'B,P,W,R'")
-
-    data = parser.parse_args()
-    game.codebreaker.guess_code = data.get('code')
-    if len(game.codebreaker.guess_code.split(',')) != game.board.code_length:
-        return jsonify(
-            {'message': 'Code must be {} length'.format(game.board.code_length)}
-        ), 400
-
-    result = game.play_game()
-    return jsonify({
-        'id': game_id,
-        'code': data.get('code'),
-        'maker': game.codemaker.code,
-        'result': result
-        }), 200
+db.init_app(app)
 
 
-@app.route('/game/<int:game_id>/history', methods=['GET'])
-def game_history(game_id):
-    return jsonify({}), 501
+@app.before_first_request
+def create_tables():
+    db.create_all()
 
+
+api.add_resource(GameResource, '/game', '/game/<int:game_id>')
 
 if __name__ == '__main__':
-    app.run()
+    app.run(debug=False)

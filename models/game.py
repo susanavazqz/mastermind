@@ -1,17 +1,29 @@
-from models.player import CodeBreaker, CodeMaker
+from db import db
+
 from models.board import Board
+from models.player import CodeMaker, CodeBreaker
 
 
-class Game:
+class Game(db.Model):
+    __tablename__ = 'game'
+
+    id = db.Column(db.Integer, primary_key=True)
+    codemaker_id = db.Column(db.Integer, db.ForeignKey('codemaker.id'))
+    codemaker = db.relationship('CodeMaker', backref='codemaker_game',
+                                foreign_keys=[codemaker_id])
+    codebreaker_id = db.Column(db.Integer, db.ForeignKey('codebreaker.id'))
+    codebreaker = db.relationship('CodeBreaker', backref='codebreaker_game',
+                                  foreign_keys=[codebreaker_id])
+    board_id = db.Column(db.Integer, db.ForeignKey('board.id'))
+    board = db.relationship('Board', backref='board_game',
+                            foreign_keys=[board_id])
+    close = db.Column(db.Boolean)
+
     def __init__(self):
-        self.id = 1
-        self.codemaker = CodeMaker()
         self.codebreaker = CodeBreaker()
+        self.codemaker = CodeMaker()
         self.board = Board()
         self.close = False
-
-    def finish_game(self):
-        self.close = True
 
     def get_black_pegs(self):
         return sum([1 for x, y in zip(self.codebreaker.guess_code.split(','),
@@ -27,18 +39,27 @@ class Game:
                     white_pegs=self.get_white_pegs())
 
     def _is_finished_game(self):
-        return self.get_black_pegs() == self.board.code_length
+        return self.codebreaker.guess_code == self.codemaker.code
 
     def play_game(self):
         result = self.get_coincidence_result()
         if self._is_finished_game():
-            self.finish_game()
+            self.finish_game(self.id)
+            result = 'Congratulations! Game won!!'
 
         return result
 
-    @staticmethod
-    def find_game(id):
-        if id == 1:
-            return Game()
-        else:
-            return False
+    @classmethod
+    def find_game(cls, game_id):
+        return db.session.query(Game).get(game_id)
+
+    def save_to_db(self):
+        db.session.add(self)
+        db.session.commit()
+
+    @classmethod
+    def finish_game(cls, game_id):
+        game = cls.query.get(game_id)
+        game.close = True
+        db.session.commit()
+

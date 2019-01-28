@@ -1,7 +1,26 @@
-[![Build Status](https://travis-ci.org/susanavazqz/mastermind.svg?branch=0.1)](https://travis-ci.org/susanavazqz/mastermind)
+[![Build Status](https://travis-ci.org/susanavazqz/mastermind.svg?branch=master)](https://travis-ci.org/susanavazqz/mastermind)
 
 ## Mastermind
-Rest API that simulates the role of the Masterminds codemaker
+
+Rest API that simulates the role of the [Masterminds](https://en.wikipedia.org/wiki/Mastermind_(board_game)) codemaker.  
+
+At the moment only the basic version is available with following features:
+* 2 players (codemaker, codebreaker)
+* Pattern / Code has four colors
+* Colors availables: 
+    * 'black': 'B',
+    * 'white': 'W',
+    * 'red': 'R',
+    * 'yellow': 'Y',
+    * 'purple': 'P'
+* Unlimited chances
+
+### Requirements
+
+* Python >= 3.5
+* Flask==1.0.2
+* Flask-RESTful==0.3.7
+* Flask-SQLAlchemy==2.3.2
 
 
 ### Run
@@ -33,26 +52,32 @@ You can use curl from command line or postman to play mastermind
  }
  ```
  
- 2.- Guess the pattern. Send a PUT request adding the guess pattern as a json.
+ 2.- Guess the pattern. Send a PUT request adding the guess pattern as a json. 
  
  ```bash
- $ curl -X PUT http://127.0.0.1:5000/game/1/play \
+ $ curl -X PUT http://127.0.0.1:5000/game/1 \
   -H 'Content-Type: application/json' \
-  -d '{ "code": "A,B,C,D"}'
+  -d '{ "code": "P,R,W,B"}'
  ```
  
  Response (JSON):
  ```json
  {
   "id": "1",
-  "code": "A,B,C,D",
+  "code": "P,R,W,B",
   "result": { 
       "black_pegs": 1,
       "white_pegs": 2
     }
  }
  ```
-    
+ 
+## TODO
+
+* Custom length of pattern / code
+* Custom colors
+* Get history of the game
+
 
 ### Contributors
 
