@@ -25,9 +25,6 @@ class Game(db.Model):
         self.board = Board()
         self.close = False
 
-    def finish_game(self):
-        self.close = True
-
     def get_black_pegs(self):
         return sum([1 for x, y in zip(self.codebreaker.guess_code.split(','),
                                       self.codemaker.code.split(','))
@@ -42,12 +39,13 @@ class Game(db.Model):
                     white_pegs=self.get_white_pegs())
 
     def _is_finished_game(self):
-        return self.get_black_pegs() == self.board.code_length
+        return self.codebreaker.guess_code == self.codemaker.code
 
     def play_game(self):
         result = self.get_coincidence_result()
         if self._is_finished_game():
-            self.finish_game()
+            self.finish_game(self.id)
+            result = 'Congratulations! Game won!!'
 
         return result
 
@@ -58,3 +56,10 @@ class Game(db.Model):
     def save_to_db(self):
         db.session.add(self)
         db.session.commit()
+
+    @classmethod
+    def finish_game(cls, game_id):
+        game = cls.query.get(game_id)
+        game.close = True
+        db.session.commit()
+

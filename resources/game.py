@@ -1,4 +1,3 @@
-from flask import Flask, jsonify
 from flask_restful import Resource, reqparse
 
 from models.game import Game
@@ -14,7 +13,11 @@ class GameResource(Resource):
 
     def post(self):
         game = Game()
-        return {'id': game.id, 'message': 'Game has been created'}, 201
+        try:
+            game.save_to_db()
+            return {'id': game.id, 'message': 'Game has been created'}, 201
+        except:
+            return {'message': 'An error occurred creating game'}, 500
 
     def put(self, game_id):
         game = Game.find_game(game_id)
@@ -33,9 +36,6 @@ class GameResource(Resource):
         return {
             'id': game_id,
             'code': data.get('code'),
-            'maker': game.codemaker.code,
-            'result': result
+            'result': result,
         }, 200
 
-    def get(self, game_id):
-        return {}, 501
