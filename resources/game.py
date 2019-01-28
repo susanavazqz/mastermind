@@ -2,6 +2,9 @@ from flask_restful import Resource, reqparse
 
 from models.game import Game
 
+import logging
+logger = logging.getLogger('GameResource')
+
 
 class GameResource(Resource):
     parser = reqparse.RequestParser()
@@ -16,7 +19,8 @@ class GameResource(Resource):
         try:
             game.save_to_db()
             return {'id': game.id, 'message': 'Game has been created'}, 201
-        except:
+        except Exception as e:
+            logger.error(e)
             return {'message': 'An error occurred creating game'}, 500
 
     def put(self, game_id):
