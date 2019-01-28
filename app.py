@@ -33,4 +33,4 @@ def create_tables():
 api.add_resource(GameResource, '/game', '/game/<int:game_id>')
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(debug=False)
