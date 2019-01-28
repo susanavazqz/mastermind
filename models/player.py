@@ -32,8 +32,8 @@ class CodeMaker(Player):
 
     def __init__(self):
         super().__init__()
-        self.code = ','.join([random.choice(list(Board.CODE_PEGS.values()))
-                             for _ in range(Board.DEFAULT_CODE_LENGTH)])
+        self.code = random.sample(list(Board.CODE_PEGS.values()),
+                                  Board.DEFAULT_CODE_LENGTH)
 
 
 class CodeBreaker(Player):
